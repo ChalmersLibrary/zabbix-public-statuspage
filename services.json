@@ -1,0 +1,48 @@
+{
+    "zabbix_trigger_tags": [
+        {
+            "tag": "output",
+            "value": "statuspage"
+        }
+    ],
+    "segments":
+    [
+        {
+            "name": "Library services",
+            "description": "Services that we provide to end users.",
+            "services":
+            [
+                {
+                    "zabbix_host": "www.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "account.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "requests.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "hours.lib.chalmers.se",
+                    "description": "Web service used to provide pages for opening hours for Chalmers libraries."
+                },
+                {
+                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
+                    "display_host": "research.chalmers.se"
+                }
+            ]
+        },
+        {
+            "name": "External services",
+            "description": "Other services we rely on.",
+            "services":
+            [
+                {
+                    "zabbix_host": "libris.kb.se"
+                },
+                {
+                    "zabbix_host": "chalmers.instructure.com"
+                }
+            ]
+        }
+    ]
+}

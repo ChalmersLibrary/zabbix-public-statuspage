@@ -1,0 +1,19 @@
+{
+  "name": "zabbix-public-statuspage",
+  "version": "1.0.0",
+  "description": "Simple statuspage for services monitored by Zabbix.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --watch app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-fetch": "^4.0.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "node-fetch": "^3.3.2"
+  }
+}
