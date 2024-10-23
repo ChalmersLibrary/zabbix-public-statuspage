@@ -19,15 +19,18 @@
                     "zabbix_host": "account.lib.chalmers.se"
                 },
                 {
+                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
+                    "display_host": "research.chalmers.se"
+                },
+                {
+                    "zabbix_host": "dsw.chalmers.se"
+                },
+                {
                     "zabbix_host": "requests.lib.chalmers.se"
                 },
                 {
-                    "zabbix_host": "hours.lib.chalmers.se",
+                    "zabbix_host": "hours.cthb.se",
                     "description": "Web service used to provide pages for opening hours for Chalmers libraries."
-                },
-                {
-                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
-                    "display_host": "research.chalmers.se"
                 }
             ]
         },
