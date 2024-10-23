@@ -29,6 +29,7 @@ export async function fetchTriggers (host, tags) {
                     "output": [
                         "triggerid",
                         "description",
+                        "priority",
                         "value"
                     ],
                     "selectHosts": [ "host", "description" ]

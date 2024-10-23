@@ -28,12 +28,21 @@
                                         <% service.triggers.forEach((trigger) => { %>
                                             <% if (trigger.value == 1) { %>
                                                 <% has_error_state = true; %>
-                                                <div class="mt-2 p-2 mb-2 bg-warning text-dark">
-                                                    <div>
-                                                        <%= trigger.description %>
-                                                        <i class="bi bi-exclamation-circle-fill float-end"></i>
+                                                <% if (trigger.priority == 4 || trigger.priority == 5) { %>
+                                                    <div class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
+                                                        <div>
+                                                            <%= trigger.description %>
+                                                            <i class="bi bi-sign-stop-fill float-end"></i>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                <% } else { %>
+                                                    <div class="mt-2 p-2 mb-2 bg-warning text-dark">
+                                                        <div>
+                                                            <%= trigger.description %>
+                                                            <i class="bi bi-exclamation-circle-fill float-end"></i>
+                                                        </div>
+                                                    </div>
+                                                <% } %>
                                             <% } %>
                                         <% }); %>
                                         <% if (!has_error_state) { %>
