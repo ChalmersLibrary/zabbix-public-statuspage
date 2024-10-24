@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="container-md p-3">
-            <h1>Service status <small class="text-body-secondary" id="timestamp"></small></h1>
+            <h1>Status for CLS and Library services<small class="text-body-secondary" id="timestamp"></small></h1>
             <p>Reloaded every minute.</p>
 
             <hr>
@@ -29,7 +29,7 @@
                     <% } else { %>
                         <div class="mt-2 p-2 mb-2 bg-success text-white">
                             <h5>
-                                Everything is working as expected.
+                                Everything is ok.
                                 <i class="bi bi-check-circle-fill float-end" style="font-size: 2.8rem;"></i>
                             </h5>
                             <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
@@ -49,38 +49,44 @@
                         <p><%= segment.description %></p>
                     </div>
                     <div class="col-md-8">
-                        <% segment.services.forEach((service) => { %>
-                            <div class="card mb-3">
-                                <h5 class="card-header">
-                                    <%= service.display_host ? service.display_host : service.zabbix_host %>
-                                    <% if (service.triggers.some((x) => x.value == "1")) { %>
-                                        <span class="bi bi-exclamation-circle-fill float-end"></span>
-                                    <% } else { %>
-                                        <span class="bi bi-check-circle-fill text-success float-end"></span>
-                                    <% } %>
-                                </h5>
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-body-secondary">
-                                        <%= service.description ? service.description : null %>
-                                    </h6>
-                                    <% let has_error_state = false; %>
-                                    <% service.triggers.forEach((trigger) => { %>
-                                        <% if (trigger.value == 1) { %>
-                                            <% has_error_state = true; %>
-                                            <% if (trigger.priority == 4 || trigger.priority == 5) { %>
-                                                <span class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
-                                                    <%= trigger.description %>
-                                                </span>
+                        <div class="row row-cols-1 row-cols-xl-2 g-4">
+                            <% segment.services.forEach((service) => { %>
+                                <div class="col">
+                                    <div class="card mb-3">
+                                        <h5 class="card-header">
+                                            <%= service.display_host ? service.display_host : service.zabbix_host %>
+                                            <% if (service.triggers.some((x) => x.value == "1")) { %>
+                                                <span class="bi bi-exclamation-circle-fill float-end"></span>
                                             <% } else { %>
-                                                <span class="badge text-bg-warning">
-                                                    <%= trigger.description %>
-                                                </span>
+                                                <span class="bi bi-check-circle-fill text-success float-end"></span>
                                             <% } %>
-                                        <% } %>
-                                    <% }); %>
+                                        </h5>
+                                        <div class="card-body">
+                                            <h6 class="card-subtitle mb-0 text-body-secondary">
+                                                <%= service.description ? service.description : null %>
+                                            </h6>
+                                            <% let has_error_state = false; %>
+                                            <% service.triggers.forEach((trigger) => { %>
+                                                <% if (trigger.value == 1) { %>
+                                                    <div class="mt-2">
+                                                        <% has_error_state = true; %>
+                                                        <% if (trigger.priority == 4 || trigger.priority == 5) { %>
+                                                            <span class="p-2 badge text-bg-danger">
+                                                                <%= trigger.description %>
+                                                            </span>
+                                                        <% } else { %>
+                                                            <span class="p-2 badge text-bg-warning">
+                                                                <%= trigger.description %>
+                                                            </span>
+                                                        <% } %>
+                                                    </div>
+                                                <% } %>
+                                            <% }); %>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        <% }); %>
+                            <% }); %>
+                        </div>
                     </div>
                 </div>
             <% }); %>

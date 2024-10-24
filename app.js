@@ -22,13 +22,12 @@ app.get('/', async (req, res) => {
             for (var service of segment.services)
             {
                 const triggers = await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags);
-                // console.log("___TRIGGERS___: " + JSON.stringify(triggers.result));
-    
                 service.triggers = triggers.result;
 
                 // DEBUG
                 /* if (service.triggers[0].triggerid == "24294") {
                     service.triggers[0].value = "1";
+                    service.triggers[0].priority = "3";
                 } */
     
                 if (service.triggers.some((x) => x.value == "1")) {
@@ -56,8 +55,6 @@ app.get('/', async (req, res) => {
         console.error(error);
         res.next(error);
     }
-
-    // console.log("___ALL_SERVICES__OUTSIDE___: " + JSON.stringify(services));
 
     return res.render('index', { data: services, summary: { hosts: summaryHosts, ok: summaryHostsWithOK, problem: summaryHostsWithProblem } });
 });
