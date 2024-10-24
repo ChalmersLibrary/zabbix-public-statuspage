@@ -19,13 +19,6 @@
                     "zabbix_host": "account.lib.chalmers.se"
                 },
                 {
-                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
-                    "display_host": "research.chalmers.se"
-                },
-                {
-                    "zabbix_host": "dsw.chalmers.se"
-                },
-                {
                     "zabbix_host": "requests.lib.chalmers.se"
                 },
                 {
@@ -35,10 +28,33 @@
             ]
         },
         {
+            "name": "Data services",
+            "description": "Data and metadata services and repositories.",
+            "services":
+            [
+                {
+                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
+                    "display_host": "research.chalmers.se"
+                },
+                {
+                    "zabbix_host": "odr.chalmers.se"
+                },
+                {
+                    "zabbix_host": "dsw.chalmers.se"
+                },
+                {
+                    "zabbix_host": "elk-prod.cthb.se"
+                }
+            ]
+        },
+        {
             "name": "External services",
             "description": "Other services we rely on.",
             "services":
             [
+                {
+                    "zabbix_host": "research.ebsco.com"
+                },
                 {
                     "zabbix_host": "libris.kb.se"
                 },
