@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node --env-file=.env app.js",
+    "start": "node app.js",
     "dev": "node --env-file=.env --watch app.js"
   },
   "keywords": [],
