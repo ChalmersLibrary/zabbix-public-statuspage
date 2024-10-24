@@ -3,86 +3,125 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%= title %></title>
+        <title>Service status</title>
+        <!-- <meta http-equiv="refresh" content="60"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     </head>
     <body>
         <div class="container-md p-3">
-            <h1><%= title %> <small class="text-body-secondary">15:54</small></h1>
+            <h1>Service status <small class="text-body-secondary" id="timestamp"></small></h1>
+            <p>Reloaded every minute.</p>
             <hr>
             <% data.segments.forEach((segment) => { %>
                 <div class="row py-3">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <h2><%= segment.name %></h2>
                         <p><%= segment.description %></p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-md-8">
                         <% segment.services.forEach((service) => { %>
                             <div class="card mb-3">
+                                <h5 class="card-header">
+                                    <%= service.display_host ? service.display_host : service.zabbix_host %>
+                                </h5>
                                 <div class="card-body">
-                                    <h5 class="card-title"><%= service.display_host ? service.display_host : service.zabbix_host %></h5>
                                     <h6 class="card-subtitle mb-2 text-body-secondary"><%= service.description ? service.description : null %></h6>
-                                    <p class="card-text">
-                                        <% let has_error_state = false; %>
-                                        <% service.triggers.forEach((trigger) => { %>
-                                            <% if (trigger.value == 1) { %>
-                                                <% has_error_state = true; %>
-                                                <% if (trigger.priority == 4 || trigger.priority == 5) { %>
-                                                    <div class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
-                                                        <div>
-                                                            <%= trigger.description %>
-                                                            <i class="bi bi-sign-stop-fill float-end"></i>
-                                                        </div>
+                                    <% let has_error_state = false; %>
+                                    <% service.triggers.filter((t) => t.status == "0").forEach((trigger) => { %>
+                                        <% if (trigger.value == 1) { %>
+                                            <% has_error_state = true; %>
+                                            <% if (trigger.priority == 4 || trigger.priority == 5) { %>
+                                                <div class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
+                                                    <div>
+                                                        <%= trigger.description %>
+                                                        <i class="bi bi-sign-stop-fill float-end"></i>
                                                     </div>
-                                                <% } else { %>
-                                                    <div class="mt-2 p-2 mb-2 bg-warning text-dark">
-                                                        <div>
-                                                            <%= trigger.description %>
-                                                            <i class="bi bi-exclamation-circle-fill float-end"></i>
-                                                        </div>
-                                                    </div>
-                                                <% } %>
-                                            <% } %>
-                                        <% }); %>
-                                        <% if (!has_error_state) { %>
-                                            <div class="mt-2 p-2 mb-2 bg-success text-white">
-                                                <div>
-                                                    Everything is working as expected.
-                                                    <i class="bi bi-check-circle-fill float-end"></i>
                                                 </div>
+                                            <% } else { %>
+                                                <div class="mt-2 p-2 mb-2 bg-warning text-dark">
+                                                    <div>
+                                                        <%= trigger.description %>
+                                                        <i class="bi bi-exclamation-circle-fill float-end"></i>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        <% } %>
+                                    <% }); %>
+                                    <% if (!has_error_state) { %>
+                                        <div class="mt-2 p-2 mb-2 bg-success text-white">
+                                            <div>
+                                                Everything is working as expected.
+                                                <i class="bi bi-check-circle-fill float-end"></i>
                                             </div>
-                                        <% } %>    
-                                    </p>
+                                        </div>
+                                    <% } %>    
                                 </div>
                             </div>
                         <% }); %>
                     </div>
                 </div>
             <% }); %>
-            <% if (data.history) { %>
-                <h2>History</h2>
-                <hr>
-                <div class="row py-3">
-                    <div class="col-4">
-                        <h2>Resolved incidents</h2>
-                        <p>Problems that has been resolved last week.</p>
-                    </div>
-                    <div class="col-8">
-                        <% data.history.forEach((history) => { %>
+
+            <hr>
+
+            <div class="row py-3">
+                <div class="col-md-4">
+                    <h3>Past incidents</h3>
+                    <p>Problems that has been reported last week.</p>
+                </div>
+                <div class="col-md-8">
+                    <% if (data.history.length) { %>
+                        <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                             <p>
-                                <strong><%= new Date(parseInt(history.clock*1000)).toLocaleString('sv-SE') %></strong> (resolved)<br>
-                                <%= history.hosts[0].host %>: <%= history.name %><br>
+                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE') %></strong>
+                                <span>resolved at <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></span>
+                                <br>
+                                <%= item.name %> <!--(<%= item.hosts[0].host %>)--><br>
                             </p>
                         <% }); %>
-                    </div>
+                    <% } else { %>
+                        <p>Nothing to report.</p>
+                    <% } %>
                 </div>
-            <% } %>
+            </div>
+
+            <hr>
+
+            <div class="row py-3">
+                <div class="col-md-4">
+                    <h3>External statuspages</h3>
+                    <p>More in-depth information about current status and past incidents for different providers.</p>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                        <a target="_blank" href="https://status.sunet.se/">SUNET</a><br>
+                        Eduroam, SWAMID, Zoom, Kaltura, network related issues.
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://status.ebsco.com/">EBSCO</a><br>
+                        EDS, FOLIO etc.
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://status.instructure.com/">Instructure</a><br>
+                        Canvas LMS and related.
+                    </p>
+                </div>
+            </div>
             <hr>
             <footer>
                 <small>zabbix-public-statuspage 1.0</small>
             </footer>
-            </div>
+        </div>
+        <script>
+            function updateDateTime() {
+              const now = new Date();
+              const currentDateTime = now.toLocaleTimeString('sv-SE');
+              document.querySelector('#timestamp').textContent = currentDateTime;
+            }
+            // setInterval(updateDateTime, 1000);
+            var data = <%- JSON.stringify(data) %>;
+          </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

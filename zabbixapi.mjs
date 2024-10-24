@@ -1,9 +1,5 @@
 'use strict';
 
-// Load environment variables from .env file
-import dotenv from 'dotenv';
-dotenv.config();
-
 import fetch from 'node-fetch';
 
 const api_url = process.env.ZABBIX_API_URL;
@@ -35,6 +31,7 @@ export async function fetchTriggers (host, tags) {
                         "triggerid",
                         "description",
                         "priority",
+                        "status",
                         "value"
                     ],
                     "selectHosts": [ "host", "description" ]
@@ -78,17 +75,18 @@ export async function fetchOkEvents (time_from, tags) {
                 "params": {
                     "tags": tags,
                     "output": [
+                        "eventid",
+                        "r_eventid",
                         "clock",
                         "value",
                         "severity",
                         "name"
                     ],
-                    "value": "0",
                     "time_from": parseInt(time_from),
                     "sortfield": ["clock", "eventid"],
                     "sortorder": "DESC",
                     "selectHosts": [ "host", "description" ]
-                },                
+                },
                 "id": 1
             })
         });
@@ -98,7 +96,7 @@ export async function fetchOkEvents (time_from, tags) {
         }
 
         json = await response.json();
-        console.log(`EVENTS: ${JSON.stringify(json)}`);
+        // console.log(`EVENTS: ${JSON.stringify(json)}`);
     }
     catch (error) {
         console.error(`Error fetching data: ${error.message}`); 

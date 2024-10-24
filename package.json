@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Simple statuspage for services monitored by Zabbix.",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "start": "node --watch app.js"
+    "start": "node --env-file=.env --watch app.js"
   },
   "keywords": [],
   "author": "",
