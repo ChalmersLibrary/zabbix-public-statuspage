@@ -12,7 +12,36 @@
         <div class="container-md p-3">
             <h1>Service status <small class="text-body-secondary" id="timestamp"></small></h1>
             <p>Reloaded every minute.</p>
+
             <hr>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <% if (summary.problem) { %>
+                        <div class="mt-2 p-2 mb-2 bg-warning text-dark">
+                            <h5>
+                                Some services report problems
+                            </h5>
+                            <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
+                            <span class="badge text-bg-dark">Problem: <%= summary.problem %></span>
+                            <span class="badge text-bg-dark">OK: <%= summary.ok %></span>
+                        </div>
+                    <% } else { %>
+                        <div class="mt-2 p-2 mb-2 bg-success text-white">
+                            <h5>
+                                Everything is working as expected.
+                                <i class="bi bi-check-circle-fill float-end" style="font-size: 2.8rem;"></i>
+                            </h5>
+                            <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
+                            <span class="badge text-bg-dark">OK: <%= summary.ok %></span>
+                            <span class="badge text-bg-dark">Problem: <%= summary.problem %></span>
+                        </div>
+                    <% } %>    
+                </div>
+            </div>
+
+            <hr>
+
             <% data.segments.forEach((segment) => { %>
                 <div class="row py-3">
                     <div class="col-md-4">
@@ -24,38 +53,31 @@
                             <div class="card mb-3">
                                 <h5 class="card-header">
                                     <%= service.display_host ? service.display_host : service.zabbix_host %>
+                                    <% if (service.triggers.some((x) => x.value == "1")) { %>
+                                        <span class="bi bi-exclamation-circle-fill float-end"></span>
+                                    <% } else { %>
+                                        <span class="bi bi-check-circle-fill text-success float-end"></span>
+                                    <% } %>
                                 </h5>
                                 <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-body-secondary"><%= service.description ? service.description : null %></h6>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                                        <%= service.description ? service.description : null %>
+                                    </h6>
                                     <% let has_error_state = false; %>
-                                    <% service.triggers.filter((t) => t.status == "0").forEach((trigger) => { %>
+                                    <% service.triggers.forEach((trigger) => { %>
                                         <% if (trigger.value == 1) { %>
                                             <% has_error_state = true; %>
                                             <% if (trigger.priority == 4 || trigger.priority == 5) { %>
-                                                <div class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
-                                                    <div>
-                                                        <%= trigger.description %>
-                                                        <i class="bi bi-sign-stop-fill float-end"></i>
-                                                    </div>
-                                                </div>
+                                                <span class="mt-2 p-2 mb-2 bg-danger-subtle text-dark">
+                                                    <%= trigger.description %>
+                                                </span>
                                             <% } else { %>
-                                                <div class="mt-2 p-2 mb-2 bg-warning text-dark">
-                                                    <div>
-                                                        <%= trigger.description %>
-                                                        <i class="bi bi-exclamation-circle-fill float-end"></i>
-                                                    </div>
-                                                </div>
+                                                <span class="badge text-bg-warning">
+                                                    <%= trigger.description %>
+                                                </span>
                                             <% } %>
                                         <% } %>
                                     <% }); %>
-                                    <% if (!has_error_state) { %>
-                                        <div class="mt-2 p-2 mb-2 bg-success text-white">
-                                            <div>
-                                                Everything is working as expected.
-                                                <i class="bi bi-check-circle-fill float-end"></i>
-                                            </div>
-                                        </div>
-                                    <% } %>    
                                 </div>
                             </div>
                         <% }); %>
@@ -96,7 +118,7 @@
                 <div class="col-md-8">
                     <p>
                         <a target="_blank" href="https://status.sunet.se/">SUNET</a><br>
-                        Eduroam, SWAMID, Zoom, Kaltura, network related issues.
+                        Eduroam, SWAMID, Zoom, Kaltura, network related issues (campus Internet access).
                     </p>
                     <p>
                         <a target="_blank" href="https://status.ebsco.com/">EBSCO</a><br>
@@ -105,6 +127,14 @@
                     <p>
                         <a target="_blank" href="https://status.instructure.com/">Instructure</a><br>
                         Canvas LMS and related.
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://status.zoom.us/">Zoom</a><br>
+                        Zoom services.
+                    </p>
+                    <p>
+                        <a target="_blank" href="https://azure.status.microsoft/en-us/status">Azure</a><br>
+                        Detailed status for all Microsoft Azure services.
                     </p>
                 </div>
             </div>

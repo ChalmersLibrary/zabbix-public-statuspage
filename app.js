@@ -1,14 +1,7 @@
 import express from 'express';
-import { readFile } from 'fs';
+import { readFile, readFileSync } from 'fs';
 import { fetchEvents, fetchTriggers } from './zabbixapi.mjs';
-
-// Load services to display
-let services;
-
-readFile('services.json', 'utf8', function (err, data) {
-    if (err) throw err;
-    services = JSON.parse(data);
-});
+import services from './services.json' assert { type: "json" };
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,27 +11,55 @@ app.set('view engine', 'ejs');
 
 // Define a route for the root URL
 app.get('/', async (req, res) => {
-    services.segments.forEach(async (segment) => {
-        segment.services.forEach(async (service) => {
-            await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags).then(result => {
-                service.triggers = result.result;
-                if (result.result && result.result[0] && result.result[0].hosts && result.result[0].hosts[0].description) {
-                    service.description = result.result[0].hosts[0].description;
+    let summaryHosts = 0;
+    let summaryHostsWithOK = 0;
+    let summaryHostsWithProblem = 0;
+
+    try 
+    {    
+        for (var segment of services.segments) 
+        {
+            for (var service of segment.services)
+            {
+                const triggers = await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags);
+                // console.log("___TRIGGERS___: " + JSON.stringify(triggers.result));
+    
+                service.triggers = triggers.result;
+
+                // DEBUG
+                /* if (service.triggers[0].triggerid == "24294") {
+                    service.triggers[0].value = "1";
+                } */
+    
+                if (service.triggers.some((x) => x.value == "1")) {
+                    summaryHostsWithProblem++;
                 }
-            });
-        });
-    });
+                else {
+                    summaryHostsWithOK++;
+                }
+    
+                summaryHosts++;
+    
+                if (service.triggers && service.triggers[0] && service.triggers[0].hosts && service.triggers[0].hosts[0].description) {
+                    service.description = service.triggers[0].hosts[0].description;
+                }
 
-    const currentDate = new Date(); 
-    const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const currentDate = new Date(); 
+                const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    fetchEvents(lastWeekDate, services.zabbix_trigger_tags).then(result => {
-        services.history = result.result;
-    });
+                const events = await fetchEvents(lastWeekDate, services.zabbix_trigger_tags);
+                services.history = events.result;
+            }
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.next(error);
+    }
 
-    // console.log(JSON.stringify(services));
+    // console.log("___ALL_SERVICES__OUTSIDE___: " + JSON.stringify(services));
 
-    res.render('index', { data: services });
+    return res.render('index', { data: services, summary: { hosts: summaryHosts, ok: summaryHostsWithOK, problem: summaryHostsWithProblem } });
 });
 
 // Start the server
