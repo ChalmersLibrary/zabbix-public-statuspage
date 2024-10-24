@@ -59,7 +59,7 @@ export async function fetchTriggers (host, tags) {
  * @param {*} tags 
  * @returns 
  */
-export async function fetchOkEvents (time_from, tags) {
+export async function fetchEvents (time_from, tags) {
     let json;
 
     try {

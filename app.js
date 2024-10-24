@@ -1,6 +1,6 @@
 import express from 'express';
 import { readFile } from 'fs';
-import { fetchOkEvents, fetchTriggers } from './zabbixapi.mjs';
+import { fetchEvents, fetchTriggers } from './zabbixapi.mjs';
 
 // Load services to display
 let services;
@@ -32,7 +32,7 @@ app.get('/', async (req, res) => {
     const currentDate = new Date(); 
     const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    fetchOkEvents(lastWeekDate, services.zabbix_trigger_tags).then(result => {
+    fetchEvents(lastWeekDate, services.zabbix_trigger_tags).then(result => {
         services.history = result.result;
     });
 
