@@ -78,6 +78,9 @@
                 },
                 {
                     "zabbix_host": "chalmers.instructure.com"
+                },
+                {
+                    "zabbix_host": "login.openathens.net"
                 }
             ]
         }
