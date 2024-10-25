@@ -55,8 +55,8 @@ export async function fetchTriggers (host, tags) {
 
 /**
  * Fetch events from Zabbix API from specified time and with tags.
- * @param {*} time_from 
- * @param {*} tags 
+ * @param {Date} time_from 
+ * @param {Array} tags 
  * @returns 
  */
 export async function fetchEvents (time_from, tags) {
@@ -82,7 +82,7 @@ export async function fetchEvents (time_from, tags) {
                         "severity",
                         "name"
                     ],
-                    "time_from": parseInt(time_from),
+                    "time_from": parseInt(time_from.getTime() / 1000),
                     "sortfield": ["clock", "eventid"],
                     "sortorder": "DESC",
                     "selectHosts": [ "host", "description" ]

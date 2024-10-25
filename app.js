@@ -45,7 +45,6 @@ app.get('/', async (req, res) => {
 
                 const currentDate = new Date(); 
                 const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-
                 const events = await fetchEvents(lastWeekDate, services.zabbix_trigger_tags);
                 services.history = events.result;
             }
