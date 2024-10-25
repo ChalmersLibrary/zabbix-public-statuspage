@@ -54,7 +54,7 @@ export async function fetchTriggers (host, tags) {
 }
 
 /**
- * Fetch OK events from Zabbix API from specified time and with tags.
+ * Fetch events from Zabbix API from specified time and with tags.
  * @param {*} time_from 
  * @param {*} tags 
  * @returns 
