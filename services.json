@@ -19,11 +19,26 @@
                     "zabbix_host": "account.lib.chalmers.se"
                 },
                 {
+                    "zabbix_host": "hedlund.lib.chalmers.se",
+                    "display_host": "proxy.lib.chalmers.se"
+                },
+                {
                     "zabbix_host": "requests.lib.chalmers.se"
                 },
                 {
                     "zabbix_host": "hours.cthb.se",
                     "description": "Web service used to provide pages for opening hours for Chalmers libraries."
+                },
+                {
+                    "zabbix_host": "matomo.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "canvas-cth-lti-booking-tool.azurewebsites.net",
+                    "display_host": "canvas-lti-booking-tool"
+                },
+                {
+                    "zabbix_host": "canvas-cth-lti-group-tool.azurewebsites.net",
+                    "display_host": "canvas-lti-group-tool"
                 }
             ]
         },
@@ -41,6 +56,9 @@
                 },
                 {
                     "zabbix_host": "dsw.chalmers.se"
+                },
+                {
+                    "zabbix_host": "orcid.chalmers.se"
                 },
                 {
                     "zabbix_host": "elk-prod.cthb.se"
