@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "node --env-file=.env --watch app.js"
+    "dev": "node --env-file=.env --watch-path ./ --watch-path ./views --watch app.js"
   },
   "keywords": [],
   "author": "",
