@@ -13,8 +13,6 @@
             <h1>Service status<small class="text-body-secondary" id="timestamp"></small></h1>
             <p>Loaded <%= new Date().toLocaleTimeString('sv-SE') %>, reloads every minute.</p>
 
-            <hr>
-
             <div class="row">
                 <div class="col-md-12">
                     <% if (summary.problem) { %>
@@ -44,12 +42,12 @@
 
             <% data.segments.forEach((segment) => { %>
                 <div class="row py-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h2><%= segment.name %></h2>
                         <p><%= segment.description %></p>
                     </div>
-                    <div class="col-md-8">
-                        <div class="row row-cols-1 row-cols-xl-2 g-3">
+                    <div class="col-md-9">
+                        <div class="row row-cols-1 row-cols-xl-3 g-3">
                             <% segment.services.forEach((service) => { %>
                                 <div class="col">
                                     <div class="card mb-3">
@@ -94,18 +92,17 @@
             <hr>
 
             <div class="row py-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h3>Past incidents</h3>
                     <p>Problems that has been reported last week.</p>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <% if (data.history) { %>
                         <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                             <p>
-                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE') %></strong>
-                                <span>resolved at <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></span>
-                                <br>
-                                <%= item.name %> <!--(<%= item.hosts[0].host %>)--><br>
+                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE') %></strong><br>
+                                <span><%= item.name %></span><br>
+                                <small><%= item.hosts[0].host %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></small>
                             </p>
                         <% }); %>
                     <% } else { %>
@@ -117,11 +114,11 @@
             <hr>
 
             <div class="row py-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h3>External statuspages</h3>
                     <p>More in-depth information about current status and past incidents for different providers.</p>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <p>
                         <a target="_blank" href="https://status.sunet.se/">SUNET</a><br>
                         Eduroam, SWAMID, Zoom, Kaltura, network related issues (campus Internet access).
