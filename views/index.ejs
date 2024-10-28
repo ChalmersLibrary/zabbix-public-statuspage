@@ -11,7 +11,7 @@
     <body>
         <div class="container-md p-3">
             <h1>Service status</h1>
-            <p>Loaded <%= new Date().toLocaleTimeString('sv-SE') %>, reloads every minute.</p>
+            <p>Loaded <%= new Date().toLocaleTimeString('sv-SE', { timeZone: 'Europe/Stockholm' }) %>, reloads every minute.</p>
 
             <div class="row">
                 <div class="col-md-12">
@@ -103,9 +103,9 @@
                     <% if (data.history) { %>
                         <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                             <p>
-                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE') %></strong><br>
+                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' }) %></strong><br>
                                 <span><%= item.name %></span><br>
-                                <small><%= item.hosts[0].host %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></small>
+                                <small><%= item.hosts[0].host %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' }) %></small>
                             </p>
                         <% }); %>
                     <% } else { %>
