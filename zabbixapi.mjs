@@ -44,10 +44,14 @@ export async function fetchTriggers (host, tags) {
             throw new Error(`Response status: ${response.status}`);
         }
 
-        json = await response.json(); 
+        json = await response.json();
+
+        if (json.error) {
+            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
+        }
     }
     catch (error) {
-        console.error(`Error fetching data: ${error.message}`); 
+        throw new Error(error);
     }
 
     return json;
@@ -96,10 +100,13 @@ export async function fetchEvents (time_from, tags) {
         }
 
         json = await response.json();
-        // console.log(`EVENTS: ${JSON.stringify(json)}`);
+
+        if (json.error) {
+            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
+        }
     }
     catch (error) {
-        console.error(`Error fetching data: ${error.message}`); 
+        throw new Error(error);
     }
 
     return json;

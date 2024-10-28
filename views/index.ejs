@@ -54,7 +54,7 @@
                                     <div class="card mb-3">
                                         <h5 class="card-header">
                                             <%= service.display_host ? service.display_host : service.zabbix_host %>
-                                            <% if (service.triggers.some((x) => x.value == "1")) { %>
+                                            <% if (service.triggers?.some((x) => x.value == "1")) { %>
                                                 <span class="bi bi-exclamation-circle-fill float-end"></span>
                                             <% } else { %>
                                                 <span class="bi bi-check-circle-fill text-success float-end"></span>
@@ -65,7 +65,7 @@
                                                 <%= service.description ? service.description : null %>
                                             </h6>
                                             <% let has_error_state = false; %>
-                                            <% service.triggers.forEach((trigger) => { %>
+                                            <% for (const trigger of service.triggers) { %>
                                                 <% if (trigger.value == 1) { %>
                                                     <div class="mt-2">
                                                         <% has_error_state = true; %>
@@ -84,7 +84,7 @@
                                                         <% } %>
                                                     </div>
                                                 <% } %>
-                                            <% }); %>
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>

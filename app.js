@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
                     service.triggers[0].priority = "3";
                 } */
     
-                if (service.triggers.some((x) => x.value == "1")) {
+                if (service.triggers?.some((x) => x.value == "1")) {
                     summaryHostsWithProblem++;
                 }
                 else {
@@ -52,7 +52,8 @@ app.get('/', async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        res.next(error);
+        res.status(500);
+        return res.render('error', { error: error.message });
     }
 
     return res.render('index', { data: services, summary: { hosts: summaryHosts, ok: summaryHostsWithOK, problem: summaryHostsWithProblem } });
