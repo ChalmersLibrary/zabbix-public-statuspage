@@ -105,7 +105,7 @@
                             <p>
                                 <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' }) %></strong><br>
                                 <span><%= item.name %></span><br>
-                                <small><%= item.hosts[0].host %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' }) %></small>
+                                <small><%= data.hosts.find(x => x.key == item.hosts[0].host).display %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></small>
                             </p>
                         <% }); %>
                     <% } else { %>
@@ -153,6 +153,7 @@
                 <small><%= process.env.npm_package_name %> <%= process.env.npm_package_version %></small>
             </footer>
         </div>
+        <script type="text/javascript">var data = <%- JSON.stringify(data); %></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

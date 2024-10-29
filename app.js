@@ -14,6 +14,7 @@ app.get('/', async (req, res) => {
     let summaryHosts = 0;
     let summaryHostsWithOK = 0;
     let summaryHostsWithProblem = 0;
+    let hosts = [];
 
     try 
     {    
@@ -21,6 +22,11 @@ app.get('/', async (req, res) => {
         {
             for (var service of segment.services)
             {
+                hosts.push({ 
+                    "key": service.zabbix_host,
+                    "display": service.display_host ? service.display_host : service.zabbix_host
+                });
+
                 const triggers = await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags);
                 service.triggers = triggers.result;
 
@@ -36,7 +42,7 @@ app.get('/', async (req, res) => {
                 else {
                     summaryHostsWithOK++;
                 }
-    
+
                 summaryHosts++;
     
                 if (service.triggers && service.triggers[0] && service.triggers[0].hosts && service.triggers[0].hosts[0].description) {
@@ -49,6 +55,8 @@ app.get('/', async (req, res) => {
                 services.history = events.result;
             }
         }
+
+        services.hosts = hosts;
     }
     catch (error) {
         console.error(error);
