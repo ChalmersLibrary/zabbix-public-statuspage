@@ -11,7 +11,7 @@
     <body>
         <div class="container-md p-3">
             <h1>Service status</h1>
-            <p>Loaded <%= new Date().toLocaleTimeString('sv-SE', { timeZone: 'Europe/Stockholm' }) %>, reloads every minute.</p>
+            <p>Loaded <time datetime="<%= currentDate.toISOString() %>"  data-time="true"><%= currentDate.toLocaleTimeString() %></time>, reloads every minute.</p>
 
             <div class="row">
                 <div class="col-md-12">
@@ -103,9 +103,9 @@
                     <% if (data.history) { %>
                         <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                             <p>
-                                <strong data-clock="<%= item.clock %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' }) %></strong><br>
+                                <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong><br>
                                 <span><%= item.name %></span><br>
-                                <small><%= data.hosts.find(x => x.key == item.hosts[0].host).display %>, resolved <%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == "0")[0].clock*1000)).toLocaleString('sv-SE') %></small>
+                                <small><%= data.hosts.find(x => x.key == item.hosts[0].host).display %>, resolved <time datetime="<%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == '0')[0].clock*1000)).toISOString() %>"><%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == '0')[0].clock*1000)).toLocaleString() %></time></small>
                             </p>
                         <% }); %>
                     <% } else { %>
@@ -155,5 +155,16 @@
         </div>
         <script type="text/javascript">var data = <%- JSON.stringify(data); %></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script>
+            document.querySelectorAll('time').forEach($e => {
+                const date = new Date($e.dateTime)
+                console.log($e.onlytime)
+                if ($e.dataset.time=="true") {
+                    $e.innerHTML = date.toLocaleTimeString()
+                } else {
+                    $e.innerHTML = date.toLocaleString()
+                }
+            })
+        </script>
     </body>
 </html>
