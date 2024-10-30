@@ -15,6 +15,8 @@ app.get('/', async (req, res) => {
     let summaryHostsWithOK = 0;
     let summaryHostsWithProblem = 0;
     let hosts = [];
+    const currentDate = new Date(); 
+    const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     try 
     {    
@@ -49,8 +51,6 @@ app.get('/', async (req, res) => {
                     service.description = service.triggers[0].hosts[0].description;
                 }
 
-                const currentDate = new Date(); 
-                const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
                 const events = await fetchEvents(lastWeekDate, services.zabbix_trigger_tags);
                 services.history = events.result;
             }
@@ -64,7 +64,7 @@ app.get('/', async (req, res) => {
         return res.render('error', { error: error.message });
     }
 
-    return res.render('index', { data: services, summary: { hosts: summaryHosts, ok: summaryHostsWithOK, problem: summaryHostsWithProblem } });
+    return res.render('index', { data: services, currentDate, summary: { hosts: summaryHosts, ok: summaryHostsWithOK, problem: summaryHostsWithProblem } });
 });
 
 // Start the server
