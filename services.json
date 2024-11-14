@@ -39,6 +39,10 @@
                 {
                     "zabbix_host": "canvas-cth-lti-group-tool.azurewebsites.net",
                     "display_host": "canvas-lti-group-tool"
+                },
+                {
+                    "zabbix_host": "folio-libris-rtac.azurewebsites.net",
+                    "display_host": "folio-libris-rtac"
                 }
             ]
         },
