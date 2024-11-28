@@ -14,7 +14,11 @@
             <p>Loaded <time datetime="<%= currentDate.toISOString() %>"  data-time="true"><%= currentDate.toLocaleTimeString() %></time>, reloads every minute.</p>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-3">
+                    <h1>Service status</h1>
+                    <p>Loaded <%= new Date().toLocaleTimeString('sv-SE', { timeZone: 'Europe/Stockholm' }) %>, reloads every minute.</p>        
+                </div>
+                <div class="col-md-9">
                     <% if (summary.problem) { %>
                         <div class="rounded mt-2 p-3 mb-2 bg-warning text-dark">
                             <h5>
@@ -33,7 +37,7 @@
                             </h5>
                             <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
                         </div>
-                    <% } %>    
+                    <% } %> 
                 </div>
             </div>
 
