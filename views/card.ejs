@@ -1,0 +1,36 @@
+<div class="card mb-3">
+    <h6 class="card-header">
+        <%= service.display_host ? service.display_host : service.zabbix_host %>
+        <% if (service.triggers?.some((x)=> x.value == "1")) { %>
+            <span class="bi bi-exclamation-circle-fill float-end"></span>
+        <% } else { %>
+            <span class="bi bi-check-circle-fill text-success float-end"></span>
+        <% } %>
+    </h6>
+    <div class="card-body card-service">
+        <div class="mb-0 text-body">
+            <%= service.description ? service.description : null %>
+        </div>
+        <% let has_error_state=false; %>
+        <% for (const trigger of service.triggers) { %>
+            <% if (trigger.value==1) { %>
+                <div class="mt-2">
+                    <% has_error_state=true; %>
+                    <% if (trigger.priority==4 || trigger.priority==5) { %>
+                        <div class="mt-2 p-2 text-bg-danger">
+                            <small>
+                                <%= trigger.description %>
+                            </small>
+                        </div>
+                    <% } else { %>
+                        <div class="mt-3 p-2 text-bg-warning">
+                            <small>
+                                <%= trigger.description %>
+                            </small>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+</div>

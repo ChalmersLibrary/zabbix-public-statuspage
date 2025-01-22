@@ -19,16 +19,13 @@ app.get('/', async (req, res) => {
     const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     try 
-    {    
+    {
+        services.compact = req.query.compact == "1";
+
         for (var segment of services.segments) 
         {
             for (var service of segment.services)
             {
-                hosts.push({ 
-                    "key": service.zabbix_host,
-                    "display": service.display_host ? service.display_host : service.zabbix_host
-                });
-
                 const triggers = await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags);
                 service.triggers = triggers.result;
 
@@ -50,6 +47,14 @@ app.get('/', async (req, res) => {
                 if (service.triggers && service.triggers[0] && service.triggers[0].hosts && service.triggers[0].hosts[0].description) {
                     service.description = service.triggers[0].hosts[0].description;
                 }
+
+                hosts.push({ 
+                    "key": service.zabbix_host,
+                    "display_host": service.display_host ? service.display_host : service.zabbix_host,
+                    "display": service.display_host ? service.display_host : service.zabbix_host,
+                    "description": service.description,
+                    "triggers": service.triggers
+                });
 
                 const events = await fetchEvents(lastWeekDate, services.zabbix_trigger_tags);
                 services.history = events.result;
