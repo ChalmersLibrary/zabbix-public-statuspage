@@ -16,7 +16,7 @@ app.get('/', async (req, res) => {
     let summaryHostsWithProblem = 0;
     let hosts = [];
     const currentDate = new Date(); 
-    const lastWeekDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
 
     try 
     {
@@ -56,7 +56,7 @@ app.get('/', async (req, res) => {
                     "triggers": service.triggers
                 });
 
-                const events = await fetchEvents(lastWeekDate, services.zabbix_trigger_tags);
+                const events = await fetchEvents(backHistoryDate, services.zabbix_trigger_tags);
                 services.history = events.result;
             }
         }
