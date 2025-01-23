@@ -136,6 +136,7 @@
             <hr>
             <footer>
                 <small><%= process.env.npm_package_name %> <%= process.env.npm_package_version %></small>
+                <small class="float-end"><% if (data.compact) { %><a href="/">Normal</a><% } else { %><a href="/?compact=1">Compact</a><% } %></small>
             </footer>
         </div>
         <script type="text/javascript">var data = <%- JSON.stringify(data); %></script>
