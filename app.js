@@ -1,7 +1,7 @@
 import express from 'express';
 import { readFile, readFileSync } from 'fs';
 import { fetchEvents, fetchTriggers } from './zabbixapi.mjs';
-import services from './services.json' assert { type: "json" };
+import services from './services.json' with { type: "json" };
 
 const app = express();
 const port = process.env.PORT || 3000;
