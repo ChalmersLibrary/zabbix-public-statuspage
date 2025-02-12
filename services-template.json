@@ -1,0 +1,92 @@
+{
+    "zabbix_trigger_tags": [
+        {
+            "tag": "output",
+            "value": "statuspage"
+        }
+    ],
+    "segments":
+    [
+        {
+            "name": "Library services",
+            "description": "Services that we provide to end users.",
+            "services":
+            [
+                {
+                    "zabbix_host": "www.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "account.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "hedlund.lib.chalmers.se",
+                    "display_host": "proxy.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "requests.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "hours.cthb.se",
+                    "description": "Web service used to provide pages for opening hours for Chalmers libraries."
+                },
+                {
+                    "zabbix_host": "matomo.lib.chalmers.se"
+                },
+                {
+                    "zabbix_host": "canvas-cth-lti-booking-tool.azurewebsites.net",
+                    "display_host": "canvas-lti-booking-tool"
+                },
+                {
+                    "zabbix_host": "canvas-cth-lti-group-tool.azurewebsites.net",
+                    "display_host": "canvas-lti-group-tool"
+                },
+                {
+                    "zabbix_host": "folio-libris-rtac.azurewebsites.net",
+                    "display_host": "folio-libris-rtac"
+                }
+            ]
+        },
+        {
+            "name": "Data services",
+            "description": "Data and metadata services and repositories.",
+            "services":
+            [
+                {
+                    "zabbix_host": "chalmers-research-web-prod.azurewebsites.net",
+                    "display_host": "research.chalmers.se"
+                },
+                {
+                    "zabbix_host": "odr.chalmers.se"
+                },
+                {
+                    "zabbix_host": "dsw.chalmers.se"
+                },
+                {
+                    "zabbix_host": "orcid.chalmers.se"
+                },
+                {
+                    "zabbix_host": "elk-prod.cthb.se"
+                }
+            ]
+        },
+        {
+            "name": "External services",
+            "description": "Other services we rely on.",
+            "services":
+            [
+                {
+                    "zabbix_host": "research.ebsco.com"
+                },
+                {
+                    "zabbix_host": "libris.kb.se"
+                },
+                {
+                    "zabbix_host": "chalmers.instructure.com"
+                },
+                {
+                    "zabbix_host": "login.openathens.net"
+                }
+            ]
+        }
+    ]
+}

@@ -1,3 +1,6 @@
+# Configuration
+services.json
+
 # Logs
 logs
 *.log
