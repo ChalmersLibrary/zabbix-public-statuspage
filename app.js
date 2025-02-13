@@ -9,6 +9,9 @@ const port = process.env.PORT || 3000;
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
+// Serve static files from the "public" directory
+app.use(express.static('public'));
+
 // Define a route for the root URL
 app.get('/', async (req, res) => {
     let summaryHosts = 0;
