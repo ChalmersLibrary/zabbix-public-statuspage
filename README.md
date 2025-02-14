@@ -29,3 +29,5 @@ There is a compact view of the web page (link in bottom) where services are not 
 to display more in one view.
 
 This is a work in progress.
+
+![Example image](/status-example.png)
