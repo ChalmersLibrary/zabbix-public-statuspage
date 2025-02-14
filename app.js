@@ -1,7 +1,7 @@
 import express from 'express';
 import { readFile, readFileSync } from 'fs';
 import { fetchEvents, fetchTriggers } from './zabbixapi.mjs';
-import services from './services.json' with { type: "json" };
+import servicesDefinition from './services.json' with { type: "json" };
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +20,9 @@ app.get('/', async (req, res) => {
     let hosts = [];
     const currentDate = new Date(); 
     const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
+
+    // Create a copy of the services object for each request
+    let services = { ...servicesDefinition};
 
     try 
     {
