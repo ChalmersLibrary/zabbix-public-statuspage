@@ -1,6 +1,6 @@
 {
   "name": "zabbix-public-statuspage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple statuspage for services monitored by Zabbix.",
   "main": "app.js",
   "type": "module",
