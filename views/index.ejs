@@ -59,6 +59,34 @@
                     </div>
                 </div>
             <% } else { %>
+                <% if (data.upcoming) { %>
+                    <div class="row py-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h2>Planned service</h2>
+                                        <p>Things we know about in advance that can cause problems.</p>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <% data.upcoming.forEach((item) => { %>
+                                            <div class="mb-3">
+                                                <strong><%= item.name %></strong><br>
+                                                <div class="mb-1">
+                                                    <i class="bi bi-clock"></i>
+                                                    <strong data-clock="<%= item.active_since %>"><time datetime="<%= new Date(parseInt(item.active_since*1000)).toISOString() %>"><%= new Date(parseInt(item.active_since*1000)).toLocaleString %></time></strong> &ndash;
+                                                    <strong data-clock="<%= item.active_till %>"><time datetime="<%= new Date(parseInt(item.active_till*1000)).toISOString() %>"><%= new Date(parseInt(item.active_till*1000)).toLocaleString %></time></strong>
+                                                </div>
+                                                <span><%= item.description %></span>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                <% } %>
                 <% data.segments.forEach((segment) => { %>
                     <div class="row py-3">
                         <div class="col-md-3">

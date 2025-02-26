@@ -1,6 +1,6 @@
 import express from 'express';
 import { readFile, readFileSync } from 'fs';
-import { fetchEvents, fetchTriggers } from './zabbixapi.mjs';
+import { fetchEvents, fetchAllTriggers, fetchMaintenance } from './zabbixapi.mjs';
 import servicesDefinition from './services.json' with { type: "json" };
 
 const app = express();
@@ -18,6 +18,8 @@ app.get('/', async (req, res) => {
     let summaryHostsWithOK = 0;
     let summaryHostsWithProblem = 0;
     let hosts = [];
+    let all_triggers = [];
+    let all_hostgroups = [];
     const currentDate = new Date(); 
     const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
 
@@ -27,13 +29,15 @@ app.get('/', async (req, res) => {
     try 
     {
         services.compact = req.query.compact == "1";
+        services.hostgroups = [];
+
+        all_triggers = await fetchAllTriggers(services.zabbix_trigger_tags);
 
         for (var segment of services.segments) 
         {
             for (var service of segment.services)
             {
-                const triggers = await fetchTriggers(service.zabbix_host, services.zabbix_trigger_tags);
-                service.triggers = triggers.result;
+                service.triggers = all_triggers.result.filter(x => x.hosts.some(y => y.host == service.zabbix_host));
 
                 // DEBUG
                 /* if (service.triggers[0].triggerid == "24294") {
@@ -62,12 +66,14 @@ app.get('/', async (req, res) => {
                     "triggers": service.triggers
                 });
 
-                const events = await fetchEvents(backHistoryDate, services.zabbix_trigger_tags);
-                services.history = events.result;
+                all_hostgroups.push(service.triggers[0].hostgroups[0].groupid);
             }
         }
 
         services.hosts = hosts;
+        services.hostgroups = [...new Set(all_hostgroups)];
+        services.history = (await fetchEvents(backHistoryDate, services.zabbix_trigger_tags)).result;
+        services.upcoming = (await fetchMaintenance(services.hostgroups)).result;
     }
     catch (error) {
         console.error(error);
