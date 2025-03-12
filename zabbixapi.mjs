@@ -25,6 +25,7 @@ export async function fetchAllTriggers (tags) {
                 "method": "trigger.get",
                 "params": {
                     "tags": tags,
+                    "maintenance": false,
                     "output": [
                         "triggerid",
                         "description",
