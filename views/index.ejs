@@ -58,6 +58,19 @@
                         </div>
                     </div>
                 </div>
+                <% if (data.history) { %>
+                    <hr>
+                    <div class="row py-3">
+                        <div class="col-md-12">
+                            <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
+                                <small class="d-inline-flex my-1 mx-1 px-2 py-1 fw-semibold text-success-emphasis bg-success-subtle border border-success-subtle rounded-0">
+                                    <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong>&nbsp;
+                                    <span><%= item.name %></span>
+                                </small>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% } %>
             <% } else { %>
                 <% if (data.upcoming.length) { %>
                     <div class="row py-1">
