@@ -71,6 +71,37 @@
                         </div>
                     </div>
                 <% } %>
+            <% } else if (data.micro) { %>
+                <div class="card mb-3">
+                    <div class="card-header">Services</div>
+                    <ul class="list-group list-group-flush">
+                        <% data.hosts.forEach((host) => { %>
+                            <li class="list-group-item">
+                                <%= host.display_host ? host.display_host : host.zabbix_host %>
+                                <% if (host.triggers?.some((x)=> x.value == "1")) { %>
+                                    <span class="bi bi-exclamation-circle-fill float-end"></span>
+                                <% } else { %>
+                                    <span class="bi bi-check-circle-fill text-success float-end"></span>
+                                <% } %>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <% if (data.history) { %>
+                    <div class="card">
+                        <div class="card-header">History</div>
+                        <ul class="list-group list-group-flush">
+                            <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
+                                <li class="list-group-item">
+                                    <small>
+                                        <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong><br>
+                                        <%= item.name %>
+                                    </small>
+                                </li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
             <% } else { %>
                 <% if (data.upcoming.length) { %>
                     <div class="row py-1">
@@ -119,7 +150,7 @@
                 <% }); %>
             <% } %>
 
-            <% if (!data.compact) { %>                
+            <% if (!data.compact && !data.micro) { %>                
                 <hr>
                 <div class="row py-3">
                     <div class="col-md-3">
@@ -182,7 +213,18 @@
             <hr>
             <footer>
                 <small><%= process.env.npm_package_name %> <%= process.env.npm_package_version %></small>
-                <small class="float-end"><% if (data.compact) { %><a href="/">Normal</a><% } else { %><a href="/?compact=1">Compact</a><% } %></small>
+                <small class="float-end">
+                    <% if (data.compact) { %>
+                        <a href="/">Normal</a>
+                        <a href="/?micro=1">Micro</a>
+                    <% } else if (data.micro){ %>
+                        <a href="/">Normal</a>
+                        <a href="/?compact=1">Compact</a>
+                    <% } else { %>
+                        <a href="/?compact=1">Compact</a>
+                        <a href="/?micro=1">Micro</a>
+                    <% } %>
+                </small>
             </footer>
         </div>
         <script type="text/javascript">var data = <%- JSON.stringify(data); %></script>

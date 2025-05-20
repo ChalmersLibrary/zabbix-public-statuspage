@@ -28,6 +28,8 @@ The "external statuspages" section are hard-coded into ```views/index.ejs``` at 
 There is a compact view of the web page (link in bottom) where services are not grouped into segments, usable for public displays that need
 to display more in one view.
 
+There is a micro view of the web page (link in bottom) where only service names and history is visible, usable for narrow displays or mobile phones.
+
 This is a work in progress.
 
 ![Example image](/status-example.png)

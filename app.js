@@ -29,6 +29,7 @@ app.get('/', async (req, res) => {
     try 
     {
         services.compact = req.query.compact == "1";
+        services.micro = req.query.micro == "1";
         services.hostgroups = [];
 
         all_triggers = await fetchAllTriggers(services.zabbix_trigger_tags);
