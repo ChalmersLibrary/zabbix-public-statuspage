@@ -74,7 +74,7 @@ app.get('/', async (req, res) => {
         services.hosts = hosts;
         services.hostgroups = [...new Set(all_hostgroups)];
         services.history = (await fetchEvents(backHistoryDate, services.zabbix_trigger_tags)).result;
-        services.upcoming = (await fetchMaintenance(services.hostgroups)).result;
+        services.upcoming = (await fetchMaintenance(services.hostgroups));
     }
     catch (error) {
         console.error(error);

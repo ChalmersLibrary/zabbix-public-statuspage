@@ -207,5 +207,5 @@ export async function fetchMaintenance (groupids) {
         throw new Error(error);
     }
 
-    return json;
+    return json.result.filter((x) => x.timeperiods.some((y) => y.timeperiod_type === "0"));
 }
