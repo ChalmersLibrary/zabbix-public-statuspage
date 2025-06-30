@@ -21,7 +21,12 @@ For each service, or host, active triggers are displayed as problems and if the 
 This is for the convenience of not displaying all triggers as problems on a public webpage, for example templated triggers as 
 disk usage warnings or cpu warnings for a virtual machine host.
 
+## Notes
+
 There is also a list of past problems that are no longer active.
+
+The upcoming events, planned service or maintenance is collected with maintenance.get and filtering of items that are "one time only".
+It might not be optimal, but a way to filter what is displayed since tags don't seem to work on queries here.
 
 The "external statuspages" section are hard-coded into ```views/index.ejs``` at the moment. 
 
@@ -31,5 +36,7 @@ to display more in one view.
 There is a micro view of the web page (link in bottom) where only service names and history is visible, usable for narrow displays or mobile phones.
 
 This is a work in progress.
+
+## Example screenshot
 
 ![Example image](/status-example.png)
