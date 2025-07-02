@@ -67,7 +67,9 @@ app.get('/', async (req, res) => {
                     "triggers": service.triggers
                 });
 
-                all_hostgroups.push(service.triggers[0].hostgroups[0].groupid);
+                if (service.triggers && service.triggers[0] && service.triggers[0].hostgroups) {
+                    all_hostgroups.push(service.triggers[0].hostgroups[0].groupid);
+                }
             }
         }
 
