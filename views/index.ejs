@@ -44,10 +44,8 @@
                 </div>
             </div>
 
-            <hr>
-
             <% if (data.compact) { %>
-                <div class="row py-3">
+                <div class="row py-0 pt-4">
                     <div class="col-md-12">
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-5 g-3">
                             <% data.hosts.forEach((host) => { %>
@@ -59,11 +57,10 @@
                     </div>
                 </div>
                 <% if (data.history) { %>
-                    <hr>
-                    <div class="row py-3">
+                    <div class="row py-0 pt-3">
                         <div class="col-md-12">
                             <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
-                                <small class="d-inline-flex my-1 mx-1 px-2 py-1 fw-semibold text-success-emphasis bg-success-subtle border border-success-subtle rounded-0">
+                                <small style="font-size: 0.65rem;" class="d-inline-flex my-1 mx-1 px-2 py-1 text-success-emphasis bg-success-subtle">
                                     <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong>&nbsp;
                                     <span><%= item.name %></span>
                                 </small>
@@ -103,6 +100,7 @@
                     </div>
                 <% } %>
             <% } else { %>
+                <hr>
                 <% if (data.upcoming.length) { %>
                     <div class="row py-1">
                         <div class="col-md-12 my-0">
