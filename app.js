@@ -148,18 +148,30 @@ async function fetchStatus () {
 /**
  * Return a recently fetched status, or fetch a new one. Concurrent callers
  * share a single fetch, so a burst of visitors still makes one set of calls.
- * @returns Status as returned by fetchStatus.
+ * If Zabbix cannot be reached the last good snapshot is served instead, marked
+ * as stale, so that a planned service announcement stays readable during the
+ * very outage it describes.
+ * @returns Status as returned by fetchStatus, with a stale flag.
  */
 function getStatus () {
     if (cached_status && Date.now() - cached_status.fetchedAt < cache_ttl_ms) {
-        return Promise.resolve(cached_status.status);
+        return Promise.resolve({ ...cached_status.status, stale: false });
     }
 
     if (!pending_status) {
         pending_status = fetchStatus()
             .then((status) => {
                 cached_status = { status, fetchedAt: Date.now() };
-                return status;
+                return { ...status, stale: false };
+            })
+            .catch((error) => {
+                if (!cached_status) {
+                    throw error;
+                }
+
+                console.error('Falling back to the last good status:', error);
+
+                return { ...cached_status.status, stale: true };
             })
             .finally(() => {
                 pending_status = null;
@@ -185,7 +197,7 @@ app.get('/', async (req, res) => {
     // Only the view flags differ per request, the rest is shared and read-only.
     const data = { ...status.services, compact: req.query.compact == "1", micro: req.query.micro == "1" };
 
-    return res.render('index', { data, currentDate: status.currentDate, summary: status.summary });
+    return res.render('index', { data, currentDate: status.currentDate, summary: status.summary, stale: status.stale });
 });
 
 // Start the server

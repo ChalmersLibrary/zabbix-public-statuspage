@@ -49,6 +49,17 @@
                 </div>
             </div>
 
+            <% if (stale) { %>
+                <div class="alert alert-secondary d-flex align-items-center my-2" role="status">
+                    <i class="bi bi-cloud-slash me-2" style="font-size: 1.8rem;"></i>
+                    <div>
+                        <strong>Monitoring cannot be reached right now.</strong>
+                        Showing the last known status, collected
+                        <time datetime="<%= currentDate.toISOString() %>"><%= currentDate.toLocaleString() %></time>.
+                    </div>
+                </div>
+            <% } %>
+
             <% if (data.compact) { %>
                 <div class="row py-0 pt-4">
                     <div class="col-md-12">
