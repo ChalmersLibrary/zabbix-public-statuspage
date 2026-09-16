@@ -39,11 +39,24 @@ app.get('/', async (req, res) => {
 
         services.history = all_events.result;
 
+        // Index triggers by hostname once, instead of rescanning them per service.
+        const triggers_by_host = new Map();
+
+        for (const trigger of all_triggers.result) {
+            for (const host of trigger.hosts) {
+                if (!triggers_by_host.has(host.host)) {
+                    triggers_by_host.set(host.host, []);
+                }
+
+                triggers_by_host.get(host.host).push(trigger);
+            }
+        }
+
         for (var segment of services.segments) 
         {
             for (var service of segment.services)
             {
-                service.triggers = all_triggers.result.filter(x => x.hosts.some(y => y.host == service.zabbix_host));
+                service.triggers = triggers_by_host.get(service.zabbix_host) ?? [];
 
                 // DEBUG
                 /* if (service.triggers[0].triggerid == "24294") {
