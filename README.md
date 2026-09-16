@@ -33,7 +33,7 @@ are what the page displays.
 
 Because the group is what makes an announcement public, suppressing monitoring and announcing something are now
 separate actions. Maintenance entries on real hosts or host groups, whether one time only or recurring, never reach
-the page.
+the page. Entries whose ```Active till``` has passed are dropped, and the rest are shown oldest first.
 
 The "external statuspages" section are hard-coded into ```views/index.ejs``` at the moment. 
 

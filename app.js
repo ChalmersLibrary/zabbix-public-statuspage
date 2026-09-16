@@ -45,7 +45,14 @@ async function fetchAnnouncements (group_name) {
         return [];
     }
 
-    return await fetchMaintenance(groupids);
+    const announcements = await fetchMaintenance(groupids);
+    const now = Math.floor(Date.now() / 1000);
+
+    // Zabbix keeps a maintenance entry until it is deleted, so drop the ones
+    // that have already run their course and show what is left oldest first.
+    return announcements
+        .filter((x) => Number(x.active_till) > now)
+        .sort((a, b) => Number(a.active_since) - Number(b.active_since));
 }
 
 /**
