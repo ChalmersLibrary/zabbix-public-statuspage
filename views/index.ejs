@@ -56,6 +56,29 @@
             <% } %>
 
             <% if (data.compact) { %>
+                <% if (data.upcoming?.length) { %>
+                    <div class="row py-0 pt-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning py-2 px-3 mb-0">
+                                <% data.upcoming.forEach((item, index) => { %>
+                                    <div class="d-flex align-items-baseline <%= index ? 'mt-2' : '' %>">
+                                        <i class="bi bi-clock me-2"></i>
+                                        <div>
+                                            <strong><%= item.name %></strong>
+                                            <small class="ms-1">
+                                                <strong data-clock="<%= item.active_since %>"><time datetime="<%= new Date(parseInt(item.active_since*1000)).toISOString() %>"><%= new Date(parseInt(item.active_since*1000)).toLocaleString() %></time></strong> &ndash;
+                                                <strong data-clock="<%= item.active_till %>"><time datetime="<%= new Date(parseInt(item.active_till*1000)).toISOString() %>"><%= new Date(parseInt(item.active_till*1000)).toLocaleString() %></time></strong>
+                                            </small>
+                                            <% if (item.description) { %>
+                                                <br><small><%= item.description %></small>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
                 <div class="row py-0 pt-4">
                     <div class="col-md-12">
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-5 g-3">
