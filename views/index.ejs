@@ -17,30 +17,26 @@
     <body>
         <div class="<%= data.compact ? 'container-fluid' : 'container-md' %> p-3">
             <div class="row">
-                <div class="col-md-6">
-                    <h1 class="pt-2">Service status @ <time datetime="<%= currentDate.toISOString() %>" data-time="true"><%= currentDate.toLocaleTimeString() %></time></h1>
-                    <p>Reloads every minute.</p>
+                <div class="col-12">
+                    <div class="rounded p-3 mb-2 <%= summary.problem ? 'bg-warning text-dark' : 'bg-success text-white' %>">
+                        <h1 class="mb-0 d-flex justify-content-between align-items-center">
+                            <span>Service status @ <time datetime="<%= currentDate.toISOString() %>" data-time="true"><%= currentDate.toLocaleTimeString() %></time></span>
+                            <i class="bi bi-<%= summary.problem ? 'exclamation' : 'check' %>-circle-fill ms-3" style="font-size: 2.8rem;"></i>
+                        </h1>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <% if (summary.problem) { %>
-                        <div class="rounded mt-2 p-3 mb-2 bg-warning text-dark">
-                            <h5>
-                                Some services report problems.
-                                <i class="bi bi-exclamation-circle-fill float-end" style="font-size: 2.8rem;"></i>
-                            </h5>
-                            <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
-                            <span class="badge text-bg-dark">Problem: <%= summary.problem %></span>
-                            <span class="badge text-bg-dark">OK: <%= summary.ok %></span>
-                        </div>
-                    <% } else { %>
-                        <div class="rounded mt-2 p-3 mb-2 bg-success text-white">
-                            <h5>
-                                Everything is ok.
-                                <i class="bi bi-check-circle-fill float-end" style="font-size: 2.8rem;"></i>
-                            </h5>
-                            <span class="badge text-bg-dark">Total: <%= summary.hosts %></span>
-                        </div>
-                    <% } %> 
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p>
+                        <strong><%= summary.problem ? 'Some services report problems.' : 'Everything is ok.' %></strong>
+                        Reloads every minute.
+                        <span class="badge text-bg-secondary ms-1">Total: <%= summary.hosts %></span>
+                        <% if (summary.problem) { %>
+                            <span class="badge text-bg-warning">Problem: <%= summary.problem %></span>
+                            <span class="badge text-bg-success">OK: <%= summary.ok %></span>
+                        <% } %>
+                    </p>
                 </div>
             </div>
 
