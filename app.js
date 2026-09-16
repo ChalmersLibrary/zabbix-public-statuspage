@@ -1,5 +1,4 @@
 import express from 'express';
-import { readFile, readFileSync } from 'fs';
 import { fetchEvents, fetchAllTriggers, fetchMaintenance } from './zabbixapi.mjs';
 import servicesDefinition from './services.json' with { type: "json" };
 

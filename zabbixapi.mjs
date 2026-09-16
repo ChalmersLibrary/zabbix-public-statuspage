@@ -1,7 +1,5 @@
 'use strict';
 
-import fetch from 'node-fetch';
-
 const api_url = process.env.ZABBIX_API_URL;
 const api_token = process.env.ZABBIX_API_TOKEN;
 
@@ -32,51 +30,6 @@ export async function fetchAllTriggers (tags) {
                 ],
                 "selectHosts": [ "host", "description" ],
                 "selectHostGroups": [ "groupid" ]
-            },
-            "id": 1
-        })
-    }); 
-
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
-
-    const json = await response.json();
-
-    if (json.error) {
-        throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
-    }
-
-    return json;
-}
-
-/**
- * Fetch triggers from Zabbix matching hostname and tags.
- * @param {String} host 
- * @param {Array} tags 
- * @returns JSON result.
- */
-export async function fetchTriggers (host, tags) {
-    const response = await fetch(api_url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${api_token}`
-        },
-        body: JSON.stringify({
-            "jsonrpc": "2.0",
-            "method": "trigger.get",
-            "params": {
-                "host": host,
-                "tags": tags,
-                "output": [
-                    "triggerid",
-                    "description",
-                    "priority",
-                    "status",
-                    "value"
-                ],
-                "selectHosts": [ "host", "description" ]
             },
             "id": 1
         })
