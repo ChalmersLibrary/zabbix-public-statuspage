@@ -111,12 +111,6 @@ async function fetchStatus () {
         {
             service.triggers = triggers_by_host.get(service.zabbix_host) ?? [];
 
-            // DEBUG
-            /* if (service.triggers[0].triggerid == "24294") {
-                service.triggers[0].value = "1";
-                service.triggers[0].priority = "3";
-            } */
-
             if (service.triggers?.some((x) => x.value == "1")) {
                 summaryHostsWithProblem++;
             }
