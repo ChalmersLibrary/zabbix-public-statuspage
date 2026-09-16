@@ -18,25 +18,23 @@
         <div class="<%= data.compact ? 'container-fluid' : 'container-md' %> p-3">
             <div class="row">
                 <div class="col-12">
-                    <div class="rounded p-3 mb-2 <%= summary.problem ? 'bg-warning text-dark' : 'bg-success text-white' %>">
-                        <h1 class="mb-0 d-flex justify-content-between align-items-center">
-                            <span>Service status @ <time datetime="<%= currentDate.toISOString() %>" data-time="true"><%= currentDate.toLocaleTimeString() %></time></span>
+                    <div class="rounded p-3 mb-3 <%= summary.problem ? 'bg-warning text-dark' : 'bg-success text-white' %>">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h1 class="mb-1">Service status @ <time datetime="<%= currentDate.toISOString() %>" data-time="true"><%= currentDate.toLocaleTimeString() %></time></h1>
+                                <p class="mb-0">
+                                    <strong><%= summary.problem ? 'Some services report problems.' : 'Everything is ok.' %></strong>
+                                    Reloads every minute.
+                                    <span class="badge text-bg-dark ms-1">Total: <%= summary.hosts %></span>
+                                    <% if (summary.problem) { %>
+                                        <span class="badge text-bg-dark">Problem: <%= summary.problem %></span>
+                                        <span class="badge text-bg-dark">OK: <%= summary.ok %></span>
+                                    <% } %>
+                                </p>
+                            </div>
                             <i class="bi bi-<%= summary.problem ? 'exclamation' : 'check' %>-circle-fill ms-3" style="font-size: 2.8rem;"></i>
-                        </h1>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <p>
-                        <strong><%= summary.problem ? 'Some services report problems.' : 'Everything is ok.' %></strong>
-                        Reloads every minute.
-                        <span class="badge text-bg-secondary ms-1">Total: <%= summary.hosts %></span>
-                        <% if (summary.problem) { %>
-                            <span class="badge text-bg-warning">Problem: <%= summary.problem %></span>
-                            <span class="badge text-bg-success">OK: <%= summary.ok %></span>
-                        <% } %>
-                    </p>
                 </div>
             </div>
 
