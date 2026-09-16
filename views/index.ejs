@@ -66,7 +66,7 @@
                         <div class="col-md-12">
                             <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                                 <small style="font-size: 0.65rem;" class="d-inline-flex my-1 mx-1 px-2 py-1 text-success-emphasis bg-success-subtle">
-                                    <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong>&nbsp;
+                                    <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong>&nbsp;
                                     <span><%= item.name %></span>
                                 </small>
                             <% }); %>
@@ -96,7 +96,7 @@
                             <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                                 <li class="list-group-item">
                                     <small>
-                                        <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong><br>
+                                        <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong><br>
                                         <%= item.name %>
                                     </small>
                                 </li>
@@ -121,8 +121,8 @@
                                                 <strong><%= item.name %></strong><br>
                                                 <div class="mb-1">
                                                     <i class="bi bi-clock"></i>
-                                                    <strong data-clock="<%= item.active_since %>"><time datetime="<%= new Date(parseInt(item.active_since*1000)).toISOString() %>"><%= new Date(parseInt(item.active_since*1000)).toLocaleString %></time></strong> &ndash;
-                                                    <strong data-clock="<%= item.active_till %>"><time datetime="<%= new Date(parseInt(item.active_till*1000)).toISOString() %>"><%= new Date(parseInt(item.active_till*1000)).toLocaleString %></time></strong>
+                                                    <strong data-clock="<%= item.active_since %>"><time datetime="<%= new Date(parseInt(item.active_since*1000)).toISOString() %>"><%= new Date(parseInt(item.active_since*1000)).toLocaleString() %></time></strong> &ndash;
+                                                    <strong data-clock="<%= item.active_till %>"><time datetime="<%= new Date(parseInt(item.active_till*1000)).toISOString() %>"><%= new Date(parseInt(item.active_till*1000)).toLocaleString() %></time></strong>
                                                 </div>
                                                 <span><%= item.description %></span>
                                             </div>
@@ -164,7 +164,7 @@
                         <% if (data.history) { %>
                             <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
                                 <p>
-                                    <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString %></time></strong><br>
+                                    <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong><br>
                                     <span><%= item.name %></span><br>
                                     <small><%= data.hosts.find(x => x.key == item.hosts[0].host).display %>, resolved <time datetime="<%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == '0')[0].clock*1000)).toISOString() %>"><%= new Date(parseInt(data.history.filter((r_item) => r_item.eventid == item.r_eventid).filter((r_item) => r_item.value == '0')[0].clock*1000)).toLocaleString() %></time></small>
                                 </p>
