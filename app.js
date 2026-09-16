@@ -61,9 +61,8 @@ app.get('/', async (req, res) => {
                 }
 
                 hosts.push({ 
-                    "key": service.zabbix_host,
+                    "zabbix_host": service.zabbix_host,
                     "display_host": service.display_host ? service.display_host : service.zabbix_host,
-                    "display": service.display_host ? service.display_host : service.zabbix_host,
                     "description": service.description,
                     "triggers": service.triggers
                 });

@@ -163,13 +163,13 @@
                     <div class="col-md-9">
                         <% if (data.history) { %>
                             <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
-                                <% const event_host = data.hosts.find((x) => x.key == item.hosts?.[0]?.host); %>
+                                <% const event_host = data.hosts.find((x) => x.zabbix_host == item.hosts?.[0]?.host); %>
                                 <% const recovery = data.history.find((r) => r.eventid == item.r_eventid && r.value == "0"); %>
                                 <p>
                                     <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong><br>
                                     <span><%= item.name %></span><br>
                                     <small>
-                                        <%= event_host ? event_host.display : item.hosts?.[0]?.host %><% if (recovery) { %>, resolved <time datetime="<%= new Date(parseInt(recovery.clock*1000)).toISOString() %>"><%= new Date(parseInt(recovery.clock*1000)).toLocaleString() %></time><% } %>
+                                        <%= event_host ? event_host.display_host : item.hosts?.[0]?.host %><% if (recovery) { %>, resolved <time datetime="<%= new Date(parseInt(recovery.clock*1000)).toISOString() %>"><%= new Date(parseInt(recovery.clock*1000)).toLocaleString() %></time><% } %>
                                     </small>
                                 </p>
                             <% }); %>
