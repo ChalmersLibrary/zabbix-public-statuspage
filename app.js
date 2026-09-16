@@ -23,8 +23,9 @@ app.get('/', async (req, res) => {
     const currentDate = new Date(); 
     const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
 
-    // Create a copy of the services object for each request
-    let services = { ...servicesDefinition};
+    // Create a deep copy of the services object for each request, so that
+    // per-request state is never written back onto the imported definition.
+    let services = structuredClone(servicesDefinition);
 
     try 
     {
