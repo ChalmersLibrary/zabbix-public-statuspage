@@ -25,8 +25,15 @@ disk usage warnings or cpu warnings for a virtual machine host.
 
 There is also a list of past problems that are no longer active.
 
-The upcoming events, planned service or maintenance is collected with maintenance.get and filtering of items that are "one time only".
-It might not be optimal, but a way to filter what is displayed since tags don't seem to work on queries here.
+The upcoming events under "Planned service" are collected with maintenance.get, limited to the host group named in
+```zabbix_announcement_hostgroup```. Create that group in Zabbix and leave it empty: Zabbix requires a host group and a
+period on every maintenance entry, but with no hosts in the group neither has any effect, so an announcement is only
+ever text. Announcements are written as ordinary maintenance entries in that group, and ```Active since``` / ```Active till```
+are what the page displays.
+
+Because the group is what makes an announcement public, suppressing monitoring and announcing something are now
+separate actions. Maintenance entries on real hosts or host groups, whether one time only or recurring, never reach
+the page. Entries whose ```Active till``` has passed are dropped, and the rest are shown oldest first.
 
 The "external statuspages" section are hard-coded into ```views/index.ejs``` at the moment. 
 

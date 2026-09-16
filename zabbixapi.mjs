@@ -1,9 +1,9 @@
 'use strict';
 
-import fetch from 'node-fetch';
-
-const api_url = process.env.ZABBIX_API_URL;
-const api_token = process.env.ZABBIX_API_TOKEN;
+// Read on use rather than at import time, so the values are picked up no matter
+// when the environment is loaded.
+const api_url = () => process.env.ZABBIX_API_URL;
+const api_token = () => process.env.ZABBIX_API_TOKEN;
 
 /**
  * Fetch all triggers from Zabbix API matching tags.
@@ -11,99 +11,40 @@ const api_token = process.env.ZABBIX_API_TOKEN;
  * @returns JSON result.
  */
 export async function fetchAllTriggers (tags) {
-    let json;
-
-    try {
-        const response = await fetch(api_url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${api_token}`
+    const response = await fetch(api_url(), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${api_token()}`
+        },
+        body: JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "trigger.get",
+            "params": {
+                "tags": tags,
+                "maintenance": false,
+                "output": [
+                    "triggerid",
+                    "description",
+                    "priority",
+                    "status",
+                    "value"
+                ],
+                "selectHosts": [ "host", "description" ],
+                "selectHostGroups": [ "groupid" ]
             },
-            body: JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "trigger.get",
-                "params": {
-                    "tags": tags,
-                    "maintenance": false,
-                    "output": [
-                        "triggerid",
-                        "description",
-                        "priority",
-                        "status",
-                        "value"
-                    ],
-                    "selectHosts": [ "host", "description" ],
-                    "selectHostGroups": [ "groupid" ]
-                },
-                "id": 1
-            })
-        }); 
+            "id": 1
+        })
+    }); 
 
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        json = await response.json();
-
-        if (json.error) {
-            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
-        }
-    }
-    catch (error) {
-        throw new Error(error);
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
     }
 
-    return json;
-}
+    const json = await response.json();
 
-/**
- * Fetch triggers from Zabbix matching hostname and tags.
- * @param {String} host 
- * @param {Array} tags 
- * @returns JSON result.
- */
-export async function fetchTriggers (host, tags) {
-    let json;
-
-    try {
-        const response = await fetch(api_url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${api_token}`
-            },
-            body: JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "trigger.get",
-                "params": {
-                    "host": host,
-                    "tags": tags,
-                    "output": [
-                        "triggerid",
-                        "description",
-                        "priority",
-                        "status",
-                        "value"
-                    ],
-                    "selectHosts": [ "host", "description" ]
-                },
-                "id": 1
-            })
-        }); 
-
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        json = await response.json();
-
-        if (json.error) {
-            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
-        }
-    }
-    catch (error) {
-        throw new Error(error);
+    if (json.error) {
+        throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
     }
 
     return json;
@@ -116,52 +57,81 @@ export async function fetchTriggers (host, tags) {
  * @returns 
  */
 export async function fetchEvents (time_from, tags) {
-    let json;
-
-    try {
-        const response = await fetch(api_url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${api_token}`
+    const response = await fetch(api_url(), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${api_token()}`
+        },
+        body: JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "event.get",
+            "params": {
+                "tags": tags,
+                "output": [
+                    "eventid",
+                    "r_eventid",
+                    "clock",
+                    "value",
+                    "severity",
+                    "name"
+                ],
+                "time_from": parseInt(time_from.getTime() / 1000),
+                "sortfield": ["clock", "eventid"],
+                "sortorder": "DESC",
+                "selectHosts": [ "host", "description" ]
             },
-            body: JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "event.get",
-                "params": {
-                    "tags": tags,
-                    "output": [
-                        "eventid",
-                        "r_eventid",
-                        "clock",
-                        "value",
-                        "severity",
-                        "name"
-                    ],
-                    "time_from": parseInt(time_from.getTime() / 1000),
-                    "sortfield": ["clock", "eventid"],
-                    "sortorder": "DESC",
-                    "selectHosts": [ "host", "description" ]
-                },
-                "id": 1
-            })
-        });
+            "id": 1
+        })
+    });
 
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        json = await response.json();
-
-        if (json.error) {
-            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
-        }
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
     }
-    catch (error) {
-        throw new Error(error);
+
+    const json = await response.json();
+
+    if (json.error) {
+        throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
     }
 
     return json;
+}
+
+/**
+ * Look up host group ids by their exact names.
+ * @param {Array} names 
+ * @returns Array of groupids, empty when no name matched.
+ */
+export async function fetchHostGroupIds (names) {
+    const response = await fetch(api_url(), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${api_token()}`
+        },
+        body: JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "hostgroup.get",
+            "params": {
+                "output": [ "groupid", "name" ],
+                "filter": { "name": names }
+            },
+            "id": 1
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    if (json.error) {
+        throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
+    }
+
+    return json.result.map((x) => x.groupid);
 }
 
 /**
@@ -170,42 +140,35 @@ export async function fetchEvents (time_from, tags) {
  * @returns JSON result.
  */
 export async function fetchMaintenance (groupids) {
-    let json;
-
-    try {
-        const response = await fetch(api_url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${api_token}`
+    const response = await fetch(api_url(), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${api_token()}`
+        },
+        body: JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "maintenance.get",
+            "params": {
+                "groupids": groupids,
+                "output": "extend",
+                "selectHostGroups": "extend",
+                "selectTimeperiods": "extend",
+                "selectTags": "extend"
             },
-            body: JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "maintenance.get",
-                "params": {
-                    "groupids": groupids,
-                    "output": "extend",
-                    "selectHostGroups": "extend",
-                    "selectTimeperiods": "extend",
-                    "selectTags": "extend"
-                },
-                "id": 1
-            })
-        });
+            "id": 1
+        })
+    });
 
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        json = await response.json();
-
-        if (json.error) {
-            throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
-        }
-    }
-    catch (error) {
-        throw new Error(error);
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
     }
 
-    return json.result.filter((x) => x.timeperiods.some((y) => y.timeperiod_type === "0"));
+    const json = await response.json();
+
+    if (json.error) {
+        throw new Error(`Response from API: ${json.error.message} ${json.error.data}`);
+    }
+
+    return json.result;
 }

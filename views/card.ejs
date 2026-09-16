@@ -11,11 +11,9 @@
         <div class="mb-0 text-body">
             <%= service.description ? service.description : null %>
         </div>
-        <% let has_error_state=false; %>
-        <% for (const trigger of service.triggers) { %>
+        <% for (const trigger of service.triggers ?? []) { %>
             <% if (trigger.value==1) { %>
                 <div class="mt-2">
-                    <% has_error_state=true; %>
                     <% if (trigger.priority==4 || trigger.priority==5) { %>
                         <div class="mt-2 p-2 text-bg-danger">
                             <small>
