@@ -46,8 +46,10 @@ async function fetchStatus () {
 
     services.history = all_events.result;
 
-    // Index triggers by hostname once, instead of rescanning them per service.
+    // Index triggers and host descriptions by hostname once, instead of
+    // rescanning them per service.
     const triggers_by_host = new Map();
+    const description_by_host = new Map();
 
     for (const trigger of all_triggers.result) {
         for (const host of trigger.hosts) {
@@ -56,6 +58,10 @@ async function fetchStatus () {
             }
 
             triggers_by_host.get(host.host).push(trigger);
+
+            if (host.description && !description_by_host.has(host.host)) {
+                description_by_host.set(host.host, host.description);
+            }
         }
     }
 
@@ -80,9 +86,9 @@ async function fetchStatus () {
 
             summaryHosts++;
 
-            if (service.triggers && service.triggers[0] && service.triggers[0].hosts && service.triggers[0].hosts[0].description) {
-                service.description = service.triggers[0].hosts[0].description;
-            }
+            // A trigger can cover several hosts, so take the description of the
+            // host this service points at, not whichever host happens to be first.
+            service.description = description_by_host.get(service.zabbix_host) ?? service.description;
 
             hosts.push({ 
                 "zabbix_host": service.zabbix_host,
