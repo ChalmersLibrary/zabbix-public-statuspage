@@ -17,7 +17,6 @@ app.get('/', async (req, res) => {
     let summaryHostsWithOK = 0;
     let summaryHostsWithProblem = 0;
     let hosts = [];
-    let all_triggers = [];
     let all_hostgroups = [];
     const currentDate = new Date(); 
     const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
@@ -32,7 +31,13 @@ app.get('/', async (req, res) => {
         services.micro = req.query.micro == "1";
         services.hostgroups = [];
 
-        all_triggers = await fetchAllTriggers(services.zabbix_trigger_tags);
+        // Triggers and events do not depend on each other, so fetch them together.
+        const [all_triggers, all_events] = await Promise.all([
+            fetchAllTriggers(services.zabbix_trigger_tags),
+            fetchEvents(backHistoryDate, services.zabbix_trigger_tags)
+        ]);
+
+        services.history = all_events.result;
 
         for (var segment of services.segments) 
         {
@@ -74,8 +79,7 @@ app.get('/', async (req, res) => {
 
         services.hosts = hosts;
         services.hostgroups = [...new Set(all_hostgroups)];
-        services.history = (await fetchEvents(backHistoryDate, services.zabbix_trigger_tags)).result;
-        services.upcoming = (await fetchMaintenance(services.hostgroups));
+        services.upcoming = await fetchMaintenance(services.hostgroups);
     }
     catch (error) {
         console.error(error);
