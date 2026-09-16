@@ -3,7 +3,7 @@
 import 'dotenv/config';
 
 import express from 'express';
-import { fetchEvents, fetchAllTriggers, fetchMaintenance } from './zabbixapi.mjs';
+import { fetchEvents, fetchAllTriggers, fetchMaintenance, fetchHostGroupIds } from './zabbixapi.mjs';
 import servicesDefinition from './services.json' with { type: "json" };
 
 const app = express();
@@ -24,6 +24,31 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 /**
+ * Fetch the announcements shown under "Planned service". These live in a host
+ * group of their own that deliberately contains no hosts, so that announcing
+ * something never suppresses monitoring, and suppressing monitoring never
+ * announces anything.
+ * @param {String} group_name 
+ * @returns Array of maintenance objects, empty when not configured.
+ */
+async function fetchAnnouncements (group_name) {
+    if (!group_name) {
+        return [];
+    }
+
+    const groupids = await fetchHostGroupIds([ group_name ]);
+
+    // Without this guard an empty list would be sent as "no filter", which
+    // would publish every maintenance in Zabbix.
+    if (!groupids.length) {
+        console.warn(`Announcement host group "${group_name}" was not found in Zabbix.`);
+        return [];
+    }
+
+    return await fetchMaintenance(groupids);
+}
+
+/**
  * Collect the current status of every configured service from Zabbix.
  * @returns Services with triggers and history, plus summary counts.
  */
@@ -32,7 +57,6 @@ async function fetchStatus () {
     let summaryHostsWithOK = 0;
     let summaryHostsWithProblem = 0;
     let hosts = [];
-    let all_hostgroups = [];
     const currentDate = new Date(); 
     const backHistoryDate = new Date(currentDate.getTime() - 3 * 24 * 60 * 60 * 1000);
 
@@ -101,15 +125,11 @@ async function fetchStatus () {
                 "triggers": service.triggers
             });
 
-            if (service.triggers && service.triggers[0] && service.triggers[0].hostgroups) {
-                all_hostgroups.push(service.triggers[0].hostgroups[0].groupid);
-            }
         }
     }
 
     services.hosts = hosts;
-    services.hostgroups = [...new Set(all_hostgroups)];
-    services.upcoming = await fetchMaintenance(services.hostgroups);
+    services.upcoming = await fetchAnnouncements(services.zabbix_announcement_hostgroup);
 
     return {
         services,

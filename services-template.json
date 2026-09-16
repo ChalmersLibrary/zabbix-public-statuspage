@@ -1,4 +1,5 @@
 {
+    "zabbix_announcement_hostgroup": "Statuspage announcements",
     "zabbix_trigger_tags": [
         {
             "tag": "output",
