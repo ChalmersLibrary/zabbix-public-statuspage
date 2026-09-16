@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "node --watch app.js"
+    "dev": "node --watch app.js",
+    "mock": "node test/mock-zabbix.mjs",
+    "dev:mock": "node --watch test/dev-mock.mjs"
   },
   "keywords": [],
   "author": "",

@@ -11,6 +11,31 @@ Then ```npm run start``` or ```npm run dev```.
 
 You can also make a Docker container, see the Dockerfile and docker-compose.yaml files.
 
+## Development
+
+Some states are awkward to reproduce against a real Zabbix, so there is a mock API under ```test/``` that serves
+canned responses. Hostnames come from ```services.json```, so the fixtures follow whatever is configured.
+
+```
+npm run dev:mock             # services reporting problems
+npm run dev:mock -- --ok     # everything healthy
+```
+
+That serves the page on port 3001 and leaves the real Zabbix alone. To reach the states where monitoring is
+unavailable, run the two halves separately so the mock can be stopped on its own:
+
+```
+npm run mock
+ZABBIX_API_URL=http://127.0.0.1:3002 CACHE_TTL_SECONDS=5 npm run dev
+```
+
+Starting the app with nothing listening gives the error page. Loading the page first and then stopping the mock
+gives the stale notice instead, since a snapshot is already cached.
+
+The fixtures deliberately include the cases that have caused bugs: a trigger covering several hosts, an event from a
+host that is not configured, a resolved problem whose recovery event is missing, an event with no hosts, an
+announcement that has expired, and a maintenance on a real host group that must never be published.
+
 ## Configuration
 
 The file ```services.json``` contains ```zabbix_trigger_tags``` that filters triggers that only contain these tags. 
