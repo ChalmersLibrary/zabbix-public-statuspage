@@ -5,6 +5,7 @@ import 'dotenv/config';
 import express from 'express';
 import { fetchEvents, fetchAllTriggers, fetchMaintenance, fetchHostGroupIds } from './zabbixapi.mjs';
 import servicesDefinition from './services.json' with { type: "json" };
+import packageInfo from './package.json' with { type: "json" };
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +20,10 @@ let pending_status = null;
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
+
+// Read straight from package.json rather than from the npm_package_* environment
+// variables, which only exist when the app is started through an npm script.
+app.locals.appInfo = { name: packageInfo.name, version: packageInfo.version };
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
