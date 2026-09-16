@@ -61,10 +61,11 @@
                         </div>
                     </div>
                 </div>
-                <% if (data.history) { %>
+                <% const resolved = (data.history ?? []).filter((f) => f.r_eventid != "0"); %>
+                <% if (resolved.length) { %>
                     <div class="row py-0 pt-3">
                         <div class="col-md-12">
-                            <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
+                            <% resolved.forEach((item) => { %>
                                 <small style="font-size: 0.65rem;" class="d-inline-flex my-1 mx-1 px-2 py-1 text-success-emphasis bg-success-subtle">
                                     <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong>&nbsp;
                                     <span><%= item.name %></span>
@@ -89,11 +90,12 @@
                         <% }) %>
                     </div>
                 </div>
-                <% if (data.history) { %>
+                <% const resolved = (data.history ?? []).filter((f) => f.r_eventid != "0"); %>
+                <% if (resolved.length) { %>
                     <div class="card">
                         <div class="card-header">History</div>
                         <ul class="list-group list-group-flush">
-                            <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
+                            <% resolved.forEach((item) => { %>
                                 <li class="list-group-item">
                                     <small>
                                         <strong data-clock="<%= item.clock %>"><time datetime="<%= new Date(parseInt(item.clock*1000)).toISOString() %>"><%= new Date(parseInt(item.clock*1000)).toLocaleString() %></time></strong><br>
@@ -161,8 +163,9 @@
                         <p>Problems that has been reported the last couple of days.</p>
                     </div>
                     <div class="col-md-9">
-                        <% if (data.history) { %>
-                            <% data.history.filter((f) => f.r_eventid != "0").forEach((item) => { %>
+                        <% const resolved = (data.history ?? []).filter((f) => f.r_eventid != "0"); %>
+                        <% if (resolved.length) { %>
+                            <% resolved.forEach((item) => { %>
                                 <% const event_host = data.hosts.find((x) => x.zabbix_host == item.hosts?.[0]?.host); %>
                                 <% const recovery = data.history.find((r) => r.eventid == item.r_eventid && r.value == "0"); %>
                                 <p>
