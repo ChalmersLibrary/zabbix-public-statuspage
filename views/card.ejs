@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-2">
     <h6 class="card-header">
         <%= service.display_host ? service.display_host : service.zabbix_host %>
         <% if (service.triggers?.some((x)=> x.value == "1")) { %>
