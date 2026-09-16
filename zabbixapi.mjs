@@ -1,7 +1,9 @@
 'use strict';
 
-const api_url = process.env.ZABBIX_API_URL;
-const api_token = process.env.ZABBIX_API_TOKEN;
+// Read on use rather than at import time, so the values are picked up no matter
+// when the environment is loaded.
+const api_url = () => process.env.ZABBIX_API_URL;
+const api_token = () => process.env.ZABBIX_API_TOKEN;
 
 /**
  * Fetch all triggers from Zabbix API matching tags.
@@ -9,11 +11,11 @@ const api_token = process.env.ZABBIX_API_TOKEN;
  * @returns JSON result.
  */
 export async function fetchAllTriggers (tags) {
-    const response = await fetch(api_url, {
+    const response = await fetch(api_url(), {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${api_token}`
+            "Authorization": `Bearer ${api_token()}`
         },
         body: JSON.stringify({
             "jsonrpc": "2.0",
@@ -55,11 +57,11 @@ export async function fetchAllTriggers (tags) {
  * @returns 
  */
 export async function fetchEvents (time_from, tags) {
-    const response = await fetch(api_url, {
+    const response = await fetch(api_url(), {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${api_token}`
+            "Authorization": `Bearer ${api_token()}`
         },
         body: JSON.stringify({
             "jsonrpc": "2.0",
@@ -102,11 +104,11 @@ export async function fetchEvents (time_from, tags) {
  * @returns JSON result.
  */
 export async function fetchMaintenance (groupids) {
-    const response = await fetch(api_url, {
+    const response = await fetch(api_url(), {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${api_token}`
+            "Authorization": `Bearer ${api_token()}`
         },
         body: JSON.stringify({
             "jsonrpc": "2.0",

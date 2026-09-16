@@ -1,3 +1,7 @@
+// Loads .env when present. Existing environment variables win, so a container
+// that gets them from docker-compose is unaffected.
+import 'dotenv/config';
+
 import express from 'express';
 import { fetchEvents, fetchAllTriggers, fetchMaintenance } from './zabbixapi.mjs';
 import servicesDefinition from './services.json' with { type: "json" };
