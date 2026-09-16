@@ -22,7 +22,27 @@
  * chosen that will not collide with a dev server already running from .env.
  */
 
+import net from 'node:net';
+
 import { startMock } from './mock-zabbix.mjs';
+
+/**
+ * Report whether something is already listening, so a clash produces a useful
+ * sentence rather than a bare EADDRINUSE stack from deep inside express.
+ * @param {Number} port
+ * @returns True when the port is free.
+ */
+function isFree (port) {
+    return new Promise((resolve) => {
+        const probe = net.createServer();
+
+        probe.once('error', () => resolve(false));
+        probe.once('listening', () => probe.close(() => resolve(true)));
+        // No host, so this binds the same wildcard address express does. Probing
+        // 127.0.0.1 would succeed even when something already holds :::<port>.
+        probe.listen(port);
+    });
+}
 
 const ok = process.argv.includes('--ok');
 const { url } = await startMock({ ok });
@@ -32,6 +52,12 @@ process.env.ZABBIX_API_TOKEN = 'mock';
 process.env.PORT = process.env.PORT || '3001';
 
 process.env.CACHE_TTL_SECONDS = process.env.CACHE_TTL_SECONDS || '5';
+
+if (!await isFree(Number(process.env.PORT))) {
+    console.error(`Port ${process.env.PORT} is already in use. Stop whatever is on it, `
+        + `or choose another with PORT=3005 npm run dev:mock`);
+    process.exit(1);
+}
 
 console.log(`Mock Zabbix API on ${url}, reporting ${ok ? 'everything healthy' : 'problems'}.`);
 
